@@ -1,17 +1,28 @@
-
 import socket
+import struct
 
-msgFromClient = "Hello UDP Server"
-bytesToSend = str.encode(msgFromClient)
-serverAddressPort = ("127.0.0.1", 5968)
-bufferSize = 1024
+# Cria um socket UDP
+socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-# Create a UDP socket at client side
-socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+# Endereço e porta do servidor
+server_address = ("192.168.0.8", 5968)
 
-# Send to server using created UDP socket
-socket.sendto(bytesToSend, serverAddressPort)
-msgFromServer = socket.recvfrom(bufferSize)
-msg = "Message from Server {}".format(msgFromServer[0])
+# Faz pedido de subscrição
+socket.sendto(b"subscribe", server_address)
 
-print(msg)
+while True:
+    # Recebe dados do servidor
+    data, server = socket.recvfrom(1024)
+
+    # Extrai número de sequência e temperatura
+    # sequence_number = int.from_bytes(data[:4], byteorder='big')
+    # temperature = int.from_bytes(data[4:], byteorder='big')
+
+    sequence_number, temperature = struct.unpack('!If', data)
+
+    # Imprime dados recebidos
+    print(f"Sequence number: {sequence_number}")
+    print(f"Temperature: {temperature}°C")
+
+# Fecha o socket
+socket.close()
