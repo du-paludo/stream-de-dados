@@ -13,6 +13,7 @@ params = {
     "timezone": "auto",
     "forecast_days": 1
 }
+interval = 10
 
 # Socket UDP para enviar dados
 send_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -32,6 +33,7 @@ subscribed_clients = {}
 
 # Função para enviar temperatura
 def send_temperature():
+    global interval
     sequence_number = -1
     while True:
         response = requests.get(api_url, params=params)
@@ -61,7 +63,7 @@ def send_temperature():
         for client_address in subscribed_clients:
             send_socket.sendto(package, client_address)
 
-        sleep(10)
+        sleep(interval)
 
 # Thread para enviar dados
 send_thread = threading.Thread(target=send_temperature)
@@ -83,6 +85,18 @@ def receive_requests():
 # Thread para receber pedidos de subscrição
 receive_thread = threading.Thread(target=receive_requests)
 receive_thread.start()
+
+def get_input():
+    global interval
+    while True:
+        str = input()
+        if str.startswith("setinterval"):
+            interval = float(str.split(" ")[1])
+            print("Interval set to " + str.split(" ")[1] + " seconds.")
+
+# Thread para ler input do teclado
+input_thread = threading.Thread(target=get_input)
+input_thread.start()
 
 # Mantém o programa rodando
 send_thread.join()
