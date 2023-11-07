@@ -15,7 +15,7 @@ temperature_sum = 0
 socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 # Endereço e porta do servidor
-server_address = ("192.168.0.8", 5968)
+server_address = ("192.168.1.168", 5968)
 
 # Faz pedido de subscrição
 socket.sendto(b"subscribe", server_address)
@@ -37,20 +37,20 @@ def receive_data():
 
         # Extrai número de sequência e temperatura
         new_sequence_number, temperature = struct.unpack('!If', data)
-        # sequence_number = int.from_bytes(data[:4], byteorder='big')
-        # temperature = int.from_bytes(data[4:], byteorder='big')
 
         # Imprime dados recebidos
-        print(f"Sequence number: {new_sequence_number}")
-        print(f"Temperature: {temperature}°C")
+        print(f"Número de sequência: {new_sequence_number}")
+        print(f"Temperatura: {temperature}°C")
 
         temperature_sum += temperature
         packages_received += 1
 
+        # Se é o primeiro pacote recebido, não faz a verificação do número de sequência
         if old_sequence_number == -1:
             old_sequence_number = new_sequence_number
             continue
 
+        # Caso contrário, verifica se o número de sequência é diferente do esperado
         if new_sequence_number < old_sequence_number:
             packages_out_of_order += 1
         elif new_sequence_number > old_sequence_number + 1:
@@ -65,6 +65,7 @@ receive_thread.start()
 def get_input():
     while not stop_thread.is_set():
         str = input()
+        # Se o cliente digitar "unsubscribe", envia pedido de cancelamento da inscrição para o servidor
         if str == 'unsubscribe' or str == 'u' or str == 'exit' or str == 'e' or str == 'quit' or str == 'q':
             socket.sendto(b"unsubscribe", server_address)
             stop_thread.set()
@@ -77,10 +78,9 @@ input_thread.start()
 
 receive_thread.join()
 
-print("Report:")
-print(f"Total number of packages received: {packages_received}")
-print(f"Total number of packages lost: {packages_lost}")
-print(f"Total number of packages out of order: {packages_out_of_order}")
-print("")
-print(f"Sum of received temperatures: {temperature_sum}")
-print(f"Average temperature: {temperature_sum / packages_received}°C")
+print("\nRelatório:\n")
+print(f"Número total de pacotes recebidos: {packages_received}")
+print(f"Número total de pacotes perdidos: {packages_lost}")
+print(f"Número total de pacotes recebidos fora de ordem: {packages_out_of_order}\n")
+print(f"Soma das temperaturas recebidas: {temperature_sum}")
+print(f"Média da temperatura: {temperature_sum / packages_received}°C")

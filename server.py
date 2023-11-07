@@ -13,7 +13,9 @@ params = {
     "timezone": "auto",
     "forecast_days": 1
 }
-interval = 10
+interval = 2
+sequence_number = 0
+total_clients_connected = 0
 
 # Socket UDP para enviar dados
 send_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -26,43 +28,48 @@ server_address = ("", 5968)
 
 # Conecta o socket de recebimento ao endereço do servidor
 receive_socket.bind(server_address)
-print("UDP server up and listening")
+print("Servidor UDP ativo e escutando na porta 5968.")
 
 # Dicionário de clientes subscritos
 subscribed_clients = {}
 
+# Variável para parar as threads
+stop_thread = threading.Event()
+
 # Função para enviar temperatura
 def send_temperature():
     global interval
-    sequence_number = -1
-    while True:
+    global sequence_number
+
+    while not stop_thread.is_set():
         response = requests.get(api_url, params=params)
         sequence_number += 1
-        # Check if the request was successful (status code 200)
+
+        # Checa se a chamada da API foi bem-sucedida (status code 200)
         if response.status_code == 200:
-            # Parse the JSON response
             data = response.json()
-        
-            # Now you can access the data
             temperature = data["current"]["temperature_2m"]
-        
-            # Print the temperature
-            print(f"Temperature at 2 meters above ground: {temperature}°C")
+            print(f"Temperatura em Curitiba: {temperature}°C")
         else:
-            print(f"Failed to fetch data. Status code: {response.status_code}")
+            print(f"Falha ao receber os dados. Código: {response.status_code}")
 
-        # 32 bits para número de sequência
-        # 32 bits para temperatura (float)
+        # Converte a temperatura (float) para 4 bytes
+        temperature_bytes = struct.pack('!f', temperature)  # 'f' representa um float de 32 bits
 
-        # Convert temperature (a float) to 4 bytes
-        temperature_bytes = struct.pack('!f', temperature)  # 'f' represents a 32-bit float
-
-        # Convert sequence_number (an integer) to 4 bytes
-        sequence_number_bytes = struct.pack('!I', sequence_number)  # 'I' represents a 32-bit unsigned integer
+        # Converte o número de sequência (um inteiro) para 4 bytes
+        sequence_number_bytes = struct.pack('!I', sequence_number) # 'I' representa um inteiro sem sinal de 32 bits
+        
+        # Monta um pacote com as duas informações
         package = sequence_number_bytes + temperature_bytes
-        for client_address in subscribed_clients:
-            send_socket.sendto(package, client_address)
 
+        # Envia o pacote para cada cliente na lista de clientes inscritos
+        for client_address in subscribed_clients:
+            try:
+                send_socket.sendto(package, client_address)
+            except:
+                break
+
+        # Aguarda o tempo determinado antes de enviar novamente
         sleep(interval)
 
 # Thread para enviar dados
@@ -72,15 +79,24 @@ send_thread.start()
 
 # Função para receber pedidos de subscrição
 def receive_requests():
-     while True:
-        data, client_address = receive_socket.recvfrom(1024)  # Adjust buffer size as needed
+    global total_clients_connected
 
+    while not stop_thread.is_set():
+        try:
+            # Recebe mensagens
+            data, client_address = receive_socket.recvfrom(1024)
+        except:
+            break
+
+        # Se a mensagem for um pedido de inscrição, adiciona o cliente na lista de clientes inscritos
         if data == b"subscribe":
             subscribed_clients[client_address] = True
-            print(f"Client {client_address} has subscribed.")
+            total_clients_connected += 1
+            print(f"Cliente {client_address} registrou-se na lista de transmissão do servidor.")
+        # Se a mensagem for um pedido de cancelamento de inscrição, remove o cliente da lista de clientes inscritos
         elif data == b"unsubscribe":
             subscribed_clients.pop(client_address, None)
-            print(f"Client {client_address} has unsubscribed.")
+            print(f"Cliente {client_address} cancelou sua inscrição na lista de transmissão do servidor.")
 
 # Thread para receber pedidos de subscrição
 receive_thread = threading.Thread(target=receive_requests)
@@ -88,11 +104,22 @@ receive_thread.start()
 
 def get_input():
     global interval
-    while True:
+    global send_socket
+    global receive_socket
+    
+    while not stop_thread.is_set():
         str = input()
+
+        # Se o input for "setinterval", altera o intervalo de envio para o tempo especificado
         if str.startswith("setinterval"):
             interval = float(str.split(" ")[1])
-            print("Interval set to " + str.split(" ")[1] + " seconds.")
+            print("Intervalo de envio alterado para " + str.split(" ")[1] + " segundos.")
+        # Se o input for "exit", encerra o programa
+        if str == 'exit' or str == 'e' or str == 'quit' or str == 'q':
+            stop_thread.set()
+            send_socket.close()
+            receive_socket.close()
+            break
 
 # Thread para ler input do teclado
 input_thread = threading.Thread(target=get_input)
@@ -100,3 +127,9 @@ input_thread.start()
 
 # Mantém o programa rodando
 send_thread.join()
+
+# Imprime relatório final
+print("\nRelatório:\n")
+print(f"Número total de pacotes enviados: {sequence_number}")
+print(f"Número total de clientes conectados: {total_clients_connected}")
+print(f"Número de clientes conectados ao encerrar: {len(subscribed_clients)}")
