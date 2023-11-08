@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="author" content="Eduardo S. Paludo">
+        <meta name="description" content="Página pessoal de Eduardo S. Paludo">
+        <meta name="keywords" content="Eduardo, Paludo">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="resources/styles.css"/>
+        <title>T1 - Redes II</title>
+    </head>
+    <body>
+        <main>
+            <h1>Alunos</h1><br>
+            <p>Natael Pontarolo Gomes - GRR20211786</p>
+            <p>Eduardo Stefanel Paludo - GRR20210581</p>
+            
+            <h1>Introdução</h1><br>
+            <p>O objetivo deste trabalho foi implementar uma conexão UDP para transmitir dados em tempo real. No trabalho implementamos o cliente e o servidor, ambos em Python, e para a coleta de dados utilizamos a API Open Meteo, que informa a temperatura de um local em tempo real a partir do fornecimento de informações como latitude e longitude no código fonte.</p>
+            
+            <h1>Servidor</h1><br>      
+            <p>No servidor foi construída toda a lógica de armazenamento e distribuição de dados coletados pela API. Para ser possível comunicar com diversos clientes foi utilizado a implementação de threads para enviar e receber dados simultaneamente.</p>
+            <p>Existem três threads no servidor. Uma delas é responsável por escutar na porta determinada (5968) se algum cliente quer se inscrever na lista de transmissão. A segunda thread é responsável por enviar os pacotes para os clientes cadastrados na lista de transmissão. A terceira é responsável por receber input do usuário, caso o mesmo deseje encerrar o programa.</p>
+            <p>Os pacotes enviados são os mesmos para cada cliente. Eles contêm apenas dois campos: o número de sequência daquele pacote no stream e a temperatura em Curitiba.</p>
+            <p>Para encerrar o servidor, basta digitar "exit" ou "quit" na linha de comando. Caso o usuário deseje alterar o intervalo entre cada pacote enviado, basta digitar "setinterval x", onde x é a duração em segundos do intervalo.</p>
+            <p>No fim da execução do servidor, algumas estatísticas são exibidas na saída padrão, como o número total de pacotes enviados e o número total de clientes conectados.</p>
+            
+            <h1>Cliente</h1><br>  
+            <p>Ao executar o programa do cliente, é requisitado o endereço IP do servidor. Após isso, uma mensagem de pedido de inscrição é realizada automaticamente ao servidor. Ao receber a mensagem, o servidor inclui o cliente na lista de transmissão e o cliente começa a receber os dados enviados pelo servidor. Esses dados (número de sequência e temperatura) são exibidos na saída padrão a cada pacote recebido.</p>
+            <p>O cliente verifica o número de sequência para determinar se houve perda de algum pacote ou se chegaram fora de ordem.</p>
+            <p>Quando o cliente desejar cancelar a inscrição, deve digitar "unsubscribe" na linha de comando. Ao digitar esse comando, uma mensagem é enviada ao servidor, que remove o cliente da lista de transmissão. Em seguida, um relatório é exibido na tela, contendo dados sobre os pacotes recebidos.</p>
+            <p>O conceito de thread também foi utilizado no cliente, para receber dados do servidor e ler input do teclado simultaneamente.</p>
+
+            <h1>Conclusão</h1><br>
+            <p>No trabalho foi feito o que foi requisitado. Conseguimos enviar datagramas de uma máquina a outra utilizando UDP e, a partir disso, enviar dados em tempo real junto com o número de sequência e calcular a perda de pacotes. Além disso, também foi utilizado threading para que fosse possível realizar multitarefas e estabelecer diversas conexões.</p>
+                    
+            <p>Link da API: <a>https://api.open-meteo.com/v1/forecast</a></p>
+
+            <h1>Arquivos do projeto:</h1><br>
+            <p><a href="client.py.txt">client.py.txt</a></p>
+            <p><a href="server.py.txt">server.py.txt</a></p>
+            <p><a href="logs/log1-client1.txt">Log do cliente 1 para a execução 1</a></p>
+            <p><a href="logs/log1-client2.txt">Log do cliente 2 para a execução 1</a></p>
+            <p><a href="logs/log1-client3.txt">Log do cliente 3 para a execução 1</a></p>
+            <p><a href="logs/log1-server.txt">Log do servidor para execução 1</a></p>
+            <p><a href="logs/log2-client1.txt">Log do cliente 1 para a execução 2</a></p>
+            <p><a href="logs/log2-client2.txt">Log do cliente 2 para a execução 2</a></p>
+            <p><a href="logs/log2-client3.txt">Log do cliente 3 para a execução 2</a></p>
+            <p><a href="logs/log2-client4.txt">Log do cliente 4 para a execução 2</a></p>
+            <p><a href="logs/log2-server.txt">Log do servidor para a execução 2</a></p>
+	</main>
+    </body>
+</html>
