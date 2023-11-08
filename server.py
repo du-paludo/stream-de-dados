@@ -95,11 +95,13 @@ def receive_requests():
             print(f"Cliente {client_address} registrou-se na lista de transmissão do servidor.")
         # Se a mensagem for um pedido de cancelamento de inscrição, remove o cliente da lista de clientes inscritos
         elif data == b"unsubscribe":
+            send_socket.sendto(b"close", client_address)
             subscribed_clients.pop(client_address, None)
             print(f"Cliente {client_address} cancelou sua inscrição na lista de transmissão do servidor.")
 
 # Thread para receber pedidos de subscrição
 receive_thread = threading.Thread(target=receive_requests)
+receive_thread.daemon = True
 receive_thread.start()
 
 def get_input():
@@ -123,6 +125,7 @@ def get_input():
 
 # Thread para ler input do teclado
 input_thread = threading.Thread(target=get_input)
+input_thread.daemon = True
 input_thread.start()
 
 # Mantém o programa rodando

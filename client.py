@@ -6,7 +6,7 @@ import threading
 packages_received = 0
 packages_lost = 0
 packages_out_of_order = 0
-old_sequence_number = -1
+old_segit quence_number = -1
 
 # Estatística temperatura
 temperature_sum = 0
@@ -36,6 +36,9 @@ def receive_data():
         try:
             data, server = socket.recvfrom(1024)
         except:
+            break
+
+        if data == b"close":
             break
 
         # Extrai número de sequência e temperatura
@@ -77,6 +80,7 @@ def get_input():
 
 # Thread para ler input do teclado
 input_thread = threading.Thread(target=get_input)
+input_thread.daemon = True
 input_thread.start()
 
 receive_thread.join()
