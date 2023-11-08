@@ -1,0 +1,43 @@
+Digite o IP do servidor: Número de sequência: 12
+Temperatura: 28.0°C
+Número de sequência: 13
+Temperatura: 28.0°C
+Número de sequência: 14
+Temperatura: 28.0°C
+Número de sequência: 15
+Temperatura: 28.0°C
+Número de sequência: 16
+Temperatura: 28.0°C
+Número de sequência: 17
+Temperatura: 28.0°C
+Número de sequência: 18
+Temperatura: 28.0°C
+Número de sequência: 19
+Temperatura: 28.0°C
+Número de sequência: 20
+Temperatura: 28.0°C
+Número de sequência: 21
+Temperatura: 28.0°C
+Número de sequência: 22
+Temperatura: 28.0°C
+Número de sequência: 23
+Temperatura: 28.0°C
+Número de sequência: 24
+Temperatura: 28.0°C
+Número de sequência: 25
+Temperatura: 28.0°C
+Número de sequência: 26
+Temperatura: 28.0°C
+Número de sequência: 27
+Temperatura: 28.0°C
+Número de sequência: 28
+Temperatura: 28.0°C
+
+Relatório:
+
+Número total de pacotes recebidos: 17
+Número total de pacotes perdidos: 0
+Número total de pacotes recebidos fora de ordem: 0
+
+Soma das temperaturas recebidas: 476.0
+Média da temperatura: 28.0°C

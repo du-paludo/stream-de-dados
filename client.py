@@ -6,7 +6,7 @@ import threading
 packages_received = 0
 packages_lost = 0
 packages_out_of_order = 0
-old_segit quence_number = -1
+old_sequence_number = -1
 
 # Estatística temperatura
 temperature_sum = 0
