@@ -15,7 +15,10 @@ temperature_sum = 0
 socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 # Endereço e porta do servidor
-server_address = ("192.168.1.168", 5968)
+print("Digite o IP do servidor: ", end="")
+ip = input()
+
+server_address = (ip, 5968)
 
 # Faz pedido de subscrição
 socket.sendto(b"subscribe", server_address)
