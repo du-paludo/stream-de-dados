@@ -46,7 +46,7 @@ def receive_data():
 
         # Imprime dados recebidos
         print(f"Número de sequência: {new_sequence_number}")
-        print(f"Temperatura: {temperature}°C")
+        print(f"Temperatura: {round(temperature,1)}°C")
 
         temperature_sum += temperature
         packages_received += 1
@@ -89,5 +89,5 @@ print("\nRelatório:\n")
 print(f"Número total de pacotes recebidos: {packages_received}")
 print(f"Número total de pacotes perdidos: {packages_lost}")
 print(f"Número total de pacotes recebidos fora de ordem: {packages_out_of_order}\n")
-print(f"Soma das temperaturas recebidas: {temperature_sum}")
-print(f"Média da temperatura: {temperature_sum / packages_received}°C")
+print(f"Soma das temperaturas recebidas: {round(temperature_sum, 1)}")
+print(f"Média da temperatura: {round((temperature_sum / packages_received), 1)}°C")
