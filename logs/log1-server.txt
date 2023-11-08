@@ -1,0 +1,42 @@
+Servidor UDP ativo e escutando na porta 5968.
+Número de sequência: 1
+Temperatura em Curitiba: 21.9°C
+Número de sequência: 2
+Temperatura em Curitiba: 21.9°C
+Cliente ('127.0.0.1', 65512) registrou-se na lista de transmissão do servidor.
+Número de sequência: 3
+Temperatura em Curitiba: 21.9°C
+Número de sequência: 4
+Temperatura em Curitiba: 21.9°C
+Número de sequência: 5
+Temperatura em Curitiba: 21.9°C
+Cliente ('127.0.0.1', 64080) registrou-se na lista de transmissão do servidor.
+Número de sequência: 6
+Temperatura em Curitiba: 21.9°C
+Número de sequência: 7
+Temperatura em Curitiba: 21.9°C
+Cliente ('127.0.0.1', 52872) registrou-se na lista de transmissão do servidor.
+Número de sequência: 8
+Temperatura em Curitiba: 21.9°C
+Intervalo de envio alterado para 2 segundos.
+Número de sequência: 9
+Temperatura em Curitiba: 21.9°C
+Número de sequência: 10
+Temperatura em Curitiba: 21.9°C
+Número de sequência: 11
+Temperatura em Curitiba: 21.9°C
+Cliente ('127.0.0.1', 65512) cancelou sua inscrição na lista de transmissão do servidor.
+Número de sequência: 12
+Temperatura em Curitiba: 21.9°C
+Cliente ('127.0.0.1', 64080) cancelou sua inscrição na lista de transmissão do servidor.
+Número de sequência: 13
+Temperatura em Curitiba: 21.9°C
+Cliente ('127.0.0.1', 52872) cancelou sua inscrição na lista de transmissão do servidor.
+Número de sequência: 14
+Temperatura em Curitiba: 21.9°C
+
+Relatório:
+
+Número total de pacotes enviados: 14
+Número total de clientes conectados: 3
+Número de clientes conectados ao encerrar: 0

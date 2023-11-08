@@ -1,0 +1,15 @@
+Digite o IP do servidor: Número de sequência: 13
+Temperatura em Curitiba: 21.9°C
+Número de sequência: 14
+Temperatura em Curitiba: 21.9°C
+Número de sequência: 15
+Temperatura em Curitiba: 21.9°C
+
+Relatório:
+
+Número total de pacotes recebidos: 3
+Número total de pacotes perdidos: 0
+Número total de pacotes recebidos fora de ordem: 0
+
+Soma das temperaturas recebidas: 65.7
+Média da temperatura: 21.9°C

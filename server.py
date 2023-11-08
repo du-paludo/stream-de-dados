@@ -13,7 +13,7 @@ params = {
     "timezone": "auto",
     "forecast_days": 1
 }
-interval = 2
+interval = 5
 sequence_number = 0
 total_clients_connected = 0
 
@@ -49,6 +49,7 @@ def send_temperature():
         if response.status_code == 200:
             data = response.json()
             temperature = data["current"]["temperature_2m"]
+            print(f"Número de sequência: {sequence_number}")
             print(f"Temperatura em Curitiba: {temperature}°C")
         else:
             print(f"Falha ao receber os dados. Código: {response.status_code}")
